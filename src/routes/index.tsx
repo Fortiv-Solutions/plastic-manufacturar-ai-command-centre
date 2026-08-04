@@ -61,13 +61,6 @@ export const Route = createFileRoute("/")({
   component: Dashboard,
 });
 
-const RECENT_QUERIES = [
-  "Delayed Orders",
-  "Production Report",
-  "Resin Pricing",
-  "Generate Monthly Report",
-];
-
 const CRITICAL_ACTIONS = [
   {
     title: "Pending Purchase Approval: HDPE Resin Q4 Contract",
@@ -117,37 +110,12 @@ const CRITICAL_ACTIONS = [
 ];
 
 export function Dashboard() {
-  const [searchQuery, setSearchQuery] = useState("");
   const [showAllKpis, setShowAllKpis] = useState(false);
   const [showFabMenu, setShowFabMenu] = useState(false);
   const [decidedApprovals, setDecidedApprovals] = useState<Record<string, string>>({});
 
   return (
     <div className="space-y-6">
-      {/* Primary Large AI Search Header */}
-      <div className="enterprise-card p-4 md:p-6 bg-white border border-[#E5E7EB]">
-        <div className="relative">
-          <Search className="pointer-events-none absolute left-4 top-3.5 h-5 w-5 text-[#6B7280]" />
-          <input
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Ask Company AI... Search documents, plants, products, workflows, approvals..."
-            className="h-12 w-full rounded-xl border border-[#E5E7EB] bg-[#F6F8FB] pl-12 pr-4 text-sm text-[#1F2937] outline-none transition placeholder:text-[#6B7280] focus:border-[#00A99D] focus:bg-white focus:ring-2 focus:ring-[#00A99D]/20 font-medium"
-          />
-        </div>
-        <div className="mt-3 flex flex-wrap items-center gap-2">
-          <span className="text-xs font-semibold text-[#6B7280]">Recent Queries:</span>
-          {RECENT_QUERIES.map((q) => (
-            <button
-              key={q}
-              onClick={() => setSearchQuery(q)}
-              className="rounded-full border border-[#E5E7EB] bg-[#F6F8FB] px-3 py-1 text-xs font-semibold text-[#4B7EA8] hover:border-[#00A99D] hover:text-[#00A99D] transition"
-            >
-              {q}
-            </button>
-          ))}
-        </div>
-      </div>
 
       {/* Section 1: Executive Summary Hero */}
       <div className="enterprise-card p-6 bg-white border border-[#E5E7EB] relative overflow-hidden">

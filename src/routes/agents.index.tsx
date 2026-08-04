@@ -91,18 +91,20 @@ function AgentsPage() {
               className="panel group p-4 transition-all duration-200 hover:shadow-md hover:border-[#00A99D]"
             >
               <div className="flex items-start justify-between gap-2">
-                <div className="flex items-center gap-2.5">
+                <div className="flex min-w-0 flex-1 items-center gap-2.5">
                   <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-[#163B65]/20 bg-[#163B65]/10">
                     <Bot className="h-4 w-4 text-[#163B65]" />
                   </div>
-                  <div className="min-w-0">
-                    <h3 className="truncate text-sm font-bold text-[#1F2937] group-hover:text-[#00A99D] transition-colors">
+                  <div className="min-w-0 flex-1">
+                    <h3 className="truncate text-sm font-bold text-[#1F2937] group-hover:text-[#00A99D] transition-colors" title={a.name}>
                       {a.name}
                     </h3>
-                    <p className="truncate text-[11px] text-[#6B7280] font-medium">{a.department}</p>
+                    <p className="truncate text-[11px] text-[#6B7280] font-medium" title={a.department}>{a.department}</p>
                   </div>
                 </div>
-                <StatusPill status={a.status} />
+                <div className="shrink-0">
+                  <StatusPill status={a.status} />
+                </div>
               </div>
 
               <div className="mt-3 grid grid-cols-3 gap-2 text-center text-xs">
