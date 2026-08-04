@@ -1,10 +1,7 @@
-<!-- LOVABLE:BEGIN -->
-> [!IMPORTANT]
-> This project is connected to [Lovable](https://lovable.dev). Avoid rewriting
-> published git history — force pushing, or rebasing/amending/squashing commits
-> that are already pushed — as it rewrites history on Lovable's side and the
-> user will likely lose their project history.
->
-> Commits you push to the connected branch sync back to Lovable and show up in
-> the editor, so keep the branch in a working state.
-<!-- LOVABLE:END -->
+# AI Command Center for Plastic & Polymer Manufacturing Sector
+
+Enterprise AI Operating System powered by 63 AI agents and 306 zero-touch automations.
+
+## Development Guidelines
+- Maintain existing module routes and platform data structures.
+- Keep typography, spacing, and enterprise Navy (`#163B65`) & Teal (`#00A99D`) visual architecture intact.
