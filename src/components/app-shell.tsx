@@ -300,75 +300,56 @@ export function AppShell({ children }: { children: ReactNode }) {
           </div>
         )}
 
-        {/* Workspace Navigation */}
-        <nav className="flex-1 space-y-1.5 overflow-y-auto px-3 py-3">
+        {/* Main Workspace Navigation Only (No Submodules in Sidebar) */}
+        <nav className="flex-1 space-y-2 overflow-y-auto px-3 py-3">
+          <div className="px-2 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-[#00A99D]">
+            {!collapsed && <span>Workspaces</span>}
+          </div>
           {WORKSPACES.filter(
             (w) =>
               !filterQuery ||
               w.name.toLowerCase().includes(filterQuery.toLowerCase()) ||
               w.items.some((i) => i.label.toLowerCase().includes(filterQuery.toLowerCase()))
           ).map((ws) => {
-            const isExpanded = expandedWorkspaces[ws.id] || !!filterQuery;
             const hasActiveChild = ws.items.some((i) =>
               i.to === "/" ? pathname === "/" : pathname.startsWith(i.to)
             );
+            const mainRoute = ws.items[0]?.to || "/";
 
             return (
-              <div key={ws.id} className="rounded-lg overflow-hidden border border-[#1D4A7E]/60 bg-[#194270]/40">
-                <button
-                  onClick={() => toggleWorkspace(ws.id)}
-                  title={ws.name}
+              <Link
+                key={ws.id}
+                to={mainRoute}
+                title={ws.name}
+                className={cn(
+                  "flex items-center gap-3 rounded-xl px-3 py-2.5 transition-all duration-150 group border",
+                  hasActiveChild
+                    ? "bg-[#00A99D] text-white border-[#00A99D] font-bold shadow-sm"
+                    : "border-[#1D4A7E]/50 bg-[#123154]/40 text-slate-200 hover:bg-[#1D4A7E] hover:text-white hover:border-[#1D4A7E]"
+                )}
+              >
+                <div
                   className={cn(
-                    "flex w-full items-center gap-2.5 px-3 py-2.5 text-xs font-bold transition text-left",
-                    hasActiveChild ? "bg-[#00A99D] text-white" : "text-slate-200 hover:bg-[#1D4A7E] hover:text-white"
+                    "grid h-8 w-8 shrink-0 place-items-center rounded-lg transition-colors",
+                    hasActiveChild ? "bg-white/20 text-white" : "bg-[#1D4A7E]/60 text-[#00A99D] group-hover:bg-[#1D4A7E] group-hover:text-white"
                   )}
                 >
-                  <ws.icon className={cn("h-4 w-4 shrink-0", hasActiveChild ? "text-white" : "text-[#00A99D]")} />
-                  {!collapsed && (
-                    <>
-                      <span className="truncate flex-1 text-xs font-bold tracking-tight">{ws.name}</span>
-                      <ChevronDown
-                        className={cn("h-3.5 w-3.5 text-slate-400 transition-transform duration-200", isExpanded && "rotate-180")}
-                      />
-                    </>
-                  )}
-                </button>
-
-                {(!collapsed && isExpanded) && (
-                  <div className="space-y-0.5 border-t border-[#1D4A7E]/40 bg-[#123154] p-1.5">
-                    {ws.items
-                      .filter((i) => !filterQuery || i.label.toLowerCase().includes(filterQuery.toLowerCase()))
-                      .map((item) => {
-                        const active = item.to === "/" ? pathname === "/" : pathname.startsWith(item.to);
-                        return (
-                          <Link
-                            key={item.label}
-                            to={item.to}
-                            title={item.label}
-                            className={cn(
-                              "flex items-center gap-2 rounded-md px-3 py-1.5 text-xs transition font-medium",
-                              active
-                                ? "bg-[#00A99D] text-white font-bold shadow-xs"
-                                : "text-slate-300 hover:bg-[#1D4A7E] hover:text-white"
-                            )}
-                          >
-                            <span className="truncate text-[11px] flex-1">{item.label}</span>
-                            {item.badge && (
-                              <span
-                                className={cn(
-                                  "rounded-full px-1.5 py-0.2 text-[9px] font-bold",
-                                  active ? "bg-white/20 text-white" : "bg-[#1D4A7E] text-slate-300"
-                                )}
-                              >
-                                {item.badge}
-                              </span>
-                            )}
-                          </Link>
-                        );
-                      })}
+                  <ws.icon className="h-4 w-4" />
+                </div>
+                {!collapsed && (
+                  <div className="min-w-0 flex-1 leading-tight">
+                    <p className="truncate text-xs font-bold">{ws.name}</p>
+                    <p
+                      className={cn(
+                        "truncate text-[10px] font-medium mt-0.5",
+                        hasActiveChild ? "text-white/80" : "text-slate-400 group-hover:text-slate-200"
+                      )}
+                    >
+                      {ws.description}
+                    </p>
                   </div>
                 )}
-              </div>
+              </Link>
             );
           })}
         </nav>
