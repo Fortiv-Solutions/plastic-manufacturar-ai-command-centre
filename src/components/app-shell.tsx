@@ -173,6 +173,69 @@ function TopIcon({
   );
 }
 
+export function WorkspaceSubmoduleNav() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+
+  const activeWorkspace = WORKSPACES.find((w) =>
+    w.items.some((i) => (i.to === "/" ? pathname === "/" : pathname.startsWith(i.to)))
+  );
+
+  if (!activeWorkspace) return null;
+
+  return (
+    <div className="mb-6 rounded-xl border border-[#E5E7EB] bg-white p-3 shadow-xs">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#E5E7EB]/80 pb-2.5 mb-2.5">
+        <div className="flex items-center gap-2.5">
+          <div className="grid h-7 w-7 place-items-center rounded-lg bg-[#163B65] text-white shadow-2xs">
+            <activeWorkspace.icon className="h-4 w-4 text-[#00A99D]" />
+          </div>
+          <div>
+            <h2 className="text-xs font-bold uppercase tracking-wider text-[#163B65]">
+              {activeWorkspace.name} Control Hub
+            </h2>
+            <p className="text-[11px] font-medium text-[#6B7280]">{activeWorkspace.description}</p>
+          </div>
+        </div>
+        <span className="rounded-full bg-[#163B65]/10 px-2.5 py-0.5 text-[10px] font-bold text-[#163B65]">
+          {activeWorkspace.items.length} Submodules
+        </span>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-2">
+        {activeWorkspace.items.map((item) => {
+          const isActive = item.to === "/" ? pathname === "/" : pathname.startsWith(item.to);
+          const Icon = item.icon;
+          return (
+            <Link
+              key={item.label}
+              to={item.to}
+              className={cn(
+                "inline-flex items-center gap-2 rounded-lg px-3.5 py-1.5 text-xs font-bold transition-all duration-150",
+                isActive
+                  ? "bg-[#00A99D] text-white shadow-xs"
+                  : "bg-[#F6F8FB] text-[#4B7EA8] hover:bg-[#163B65] hover:text-white border border-[#E5E7EB]"
+              )}
+            >
+              <Icon className={cn("h-3.5 w-3.5", isActive ? "text-white" : "text-[#4B7EA8]")} />
+              <span>{item.label}</span>
+              {item.badge && (
+                <span
+                  className={cn(
+                    "rounded-full px-1.5 py-0.2 text-[9px]",
+                    isActive ? "bg-white/20 text-white" : "bg-[#E5E7EB] text-[#1F2937]"
+                  )}
+                >
+                  {item.badge}
+                </span>
+              )}
+            </Link>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 export function AppShell({ children }: { children: ReactNode }) {
   const [collapsed, setCollapsed] = useState(false);
   const [openAskAi, setOpenAskAi] = useState(false);
@@ -328,7 +391,10 @@ export function AppShell({ children }: { children: ReactNode }) {
 
       <div className="flex min-w-0 flex-1 flex-col">
         <TopBar onOpenAskAi={() => setOpenAskAi(true)} />
-        <main className="min-w-0 flex-1 p-4 md:p-6 max-w-7xl w-full mx-auto">{children}</main>
+        <main className="min-w-0 flex-1 p-4 md:p-6 max-w-7xl w-full mx-auto">
+          <WorkspaceSubmoduleNav />
+          {children}
+        </main>
       </div>
     </div>
   );
