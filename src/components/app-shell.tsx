@@ -266,23 +266,34 @@ export function AppShell({ children }: { children: ReactNode }) {
         )}
       >
         {/* Sidebar Header */}
-        <div className="flex h-16 items-center gap-3 border-b border-[#1D4A7E] px-4 bg-[#163B65]">
-          <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#00A99D] text-white shadow-xs">
-            <Hexagon className="h-5 w-5 fill-white/20" />
-          </div>
-          {!collapsed && (
-            <div className="min-w-0 leading-tight">
-              <p className="truncate font-bold text-white text-sm">AI Command Center</p>
-              <p className="truncate text-[10px] font-semibold text-[#00A99D]">Polymer Operating System</p>
-            </div>
+        <div className={cn("flex h-16 items-center border-b border-[#1D4A7E] bg-[#163B65]", collapsed ? "justify-center px-2" : "gap-3 px-4")}>
+          {collapsed ? (
+            <button
+              onClick={() => setCollapsed(false)}
+              title="Expand sidebar"
+              aria-label="Expand sidebar"
+              className="grid h-10 w-10 place-items-center rounded-xl bg-[#00A99D] text-white shadow-xs hover:scale-105 transition-transform"
+            >
+              <Hexagon className="h-5 w-5 fill-white/20" />
+            </button>
+          ) : (
+            <>
+              <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#00A99D] text-white shadow-xs">
+                <Hexagon className="h-5 w-5 fill-white/20" />
+              </div>
+              <div className="min-w-0 leading-tight">
+                <p className="truncate font-bold text-white text-sm">AI Command Center</p>
+                <p className="truncate text-[10px] font-semibold text-[#00A99D]">Polymer Operating System</p>
+              </div>
+              <button
+                onClick={() => setCollapsed(true)}
+                aria-label="Collapse sidebar"
+                className="ml-auto grid h-7 w-7 place-items-center rounded-md border border-[#1D4A7E] text-slate-300 transition hover:bg-[#1D4A7E] hover:text-white"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </button>
+            </>
           )}
-          <button
-            onClick={() => setCollapsed((c) => !c)}
-            aria-label="Toggle sidebar"
-            className="ml-auto grid h-7 w-7 place-items-center rounded-md border border-[#1D4A7E] text-slate-300 transition hover:bg-[#1D4A7E] hover:text-white"
-          >
-            <ChevronLeft className={cn("h-4 w-4 transition-transform", collapsed && "rotate-180")} />
-          </button>
         </div>
 
         {/* Quick Filter inside Sidebar when expanded */}
@@ -302,9 +313,11 @@ export function AppShell({ children }: { children: ReactNode }) {
 
         {/* Main Workspace Navigation Only (No Submodules in Sidebar) */}
         <nav className="flex-1 space-y-2 overflow-y-auto px-3 py-3">
-          <div className="px-2 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-[#00A99D]">
-            {!collapsed && <span>Workspaces</span>}
-          </div>
+          {!collapsed && (
+            <div className="px-2 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-[#00A99D]">
+              Workspaces
+            </div>
+          )}
           {WORKSPACES.filter(
             (w) =>
               !filterQuery ||
@@ -322,7 +335,8 @@ export function AppShell({ children }: { children: ReactNode }) {
                 to={mainRoute}
                 title={ws.name}
                 className={cn(
-                  "flex items-center gap-3 rounded-xl px-3 py-2.5 transition-all duration-150 group border",
+                  "flex items-center rounded-xl transition-all duration-150 group border",
+                  collapsed ? "justify-center p-2.5" : "gap-3 px-3 py-2.5",
                   hasActiveChild
                     ? "bg-[#00A99D] text-white border-[#00A99D] font-bold shadow-sm"
                     : "border-[#1D4A7E]/50 bg-[#123154]/40 text-slate-200 hover:bg-[#1D4A7E] hover:text-white hover:border-[#1D4A7E]"
