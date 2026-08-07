@@ -1,20 +1,20 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { Search, SlidersHorizontal, Play, CheckCircle2 } from "lucide-react";
-import { PageHeader, Panel, StatusPill, Meter, KpiCard, RightPanel, PageFooter } from "@/components/ui-kit";
+import { PageHeader, Panel, StatusPill, Meter, KpiCard, RightPanel, PageFooter, RoadmapSection } from "@/components/ui-kit";
 import { AUTOMATIONS, DEPARTMENTS, inr } from "@/data/platform";
 
 export const Route = createFileRoute("/automation")({
   head: () => ({
     meta: [
-      { title: "Automation Center — 306 AI Opportunities" },
+      { title: "Automation Center — 5-Phase Implementation Roadmap & 306 AI Opportunities" },
       {
         name: "description",
         content:
-          "Full catalogue of 306 AI automation opportunities with ROI, hours saved, complexity, wave, owner and delivery status.",
+          "Full catalogue of 306 AI automation opportunities with ROI, hours saved, complexity, wave, owner, 5-phase roadmap and delivery status.",
       },
-      { property: "og:title", content: "Automation Center — 306 AI opportunities" },
-      { property: "og:description", content: "Prioritise, approve, execute and monitor every automation in the blueprint." },
+      { property: "og:title", content: "Automation Center & Implementation Roadmap" },
+      { property: "og:description", content: "Prioritise, approve, execute and monitor every automation in the 5-phase blueprint." },
     ],
   }),
   component: AutomationCenter,
@@ -52,9 +52,9 @@ function AutomationCenter() {
     <div className="space-y-6">
       <PageHeader
         eyebrow="Automation Studio"
-        title="306 AI Automation Catalogue"
-        description="The complete blueprint catalogue of 306 AI automation opportunities across all 44 business functions — prioritised by ROI, sequenced across a 12-month, four-wave roadmap."
-        breadcrumbs={[{ label: "Automation Studio", to: "/automation" }, { label: "306 Automation Blueprint" }]}
+        title="Implementation Roadmap & 306 AI Automation Catalogue"
+        description="The complete 5-phase deployment roadmap and blueprint catalogue of 306 AI automation opportunities across all 44 business functions — prioritised by ROI and zero-hardware execution."
+        breadcrumbs={[{ label: "Automation Studio", to: "/automation" }, { label: "5-Phase Roadmap & Blueprint" }]}
       />
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
@@ -63,6 +63,9 @@ function AutomationCenter() {
         <KpiCard label="Hours Saved / Month" value={totals.hours.toLocaleString()} delta="Office effort released" tone="accent" />
         <KpiCard label="Annual Value Delivered" value={inr(totals.savings)} delta="Run-rate at full adoption" tone="success" />
       </div>
+
+      {/* ── 5-Phase Implementation Roadmap & Security Assurance ── */}
+      <RoadmapSection />
 
       <div className="space-y-6">
         <Panel title="Filter & Execute Opportunities" subtitle="Search by code, function, priority or delivery wave">

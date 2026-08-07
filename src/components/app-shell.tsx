@@ -8,14 +8,34 @@ import {
   Workflow,
   Plug,
   ChevronLeft,
+  ChevronDown,
   Hexagon,
   X,
   Send,
   Activity,
+  LayoutDashboard,
+  Bot,
+  Building2,
+  BrainCircuit,
+  Crown,
+  Lock,
+  Zap,
   Menu,
+  Factory,
 } from "lucide-react";
 import { WORKSPACES } from "@/data/platform";
 import { cn } from "@/lib/utils";
+
+const TOP_NAV_TABS = [
+  { label: "Overview", to: "/", icon: LayoutDashboard },
+  { label: "AI Agents", to: "/agents", icon: Bot },
+  { label: "Departments", to: "/departments", icon: Building2 },
+  { label: "Company Brain", to: "/company-brain", icon: BrainCircuit },
+  { label: "Workflows", to: "/workflow-studio", icon: Workflow },
+  { label: "ROI", to: "/cockpit", icon: Crown },
+  { label: "Security", to: "/m/security", icon: Lock },
+  { label: "Roadmap", to: "/automation", icon: Zap },
+];
 
 function AskAiModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [messages, setMessages] = useState([
@@ -43,34 +63,34 @@ function AskAiModal({ open, onClose }: { open: boolean; onClose: () => void }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4">
-      <div className="w-full max-w-2xl rounded-xl border border-[#E5E7EB] bg-white shadow-xl overflow-hidden animate-rise">
-        <div className="flex items-center justify-between border-b border-[#E5E7EB] bg-[#F6F8FB] px-5 py-3.5">
-          <div className="flex items-center gap-2.5">
-            <div className="grid h-8 w-8 place-items-center rounded-lg bg-[#00A99D] text-white">
+      <div className="w-full max-w-2xl rounded-[28px] border border-[#E2E8F0] bg-white shadow-2xl overflow-hidden animate-rise">
+        <div className="flex items-center justify-between border-b border-[#E2E8F0] bg-[#F8FAFC] px-6 py-4">
+          <div className="flex items-center gap-3">
+            <div className="grid h-9 w-9 place-items-center rounded-xl bg-[#2563EB] text-white shadow-xs">
               <Sparkles className="h-4 w-4" />
             </div>
             <div>
-              <h3 className="font-bold text-[#163B65] text-sm">Ask Company AI</h3>
-              <p className="text-[11px] text-[#6B7280]">Polymer Intelligence Engine · Grounded RAG</p>
+              <h3 className="font-extrabold text-[#0F172A] text-sm">Ask Company AI</h3>
+              <p className="text-[11px] text-[#64748B] font-medium">Polymer Intelligence Engine · Grounded RAG</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="grid h-7 w-7 place-items-center rounded-md border border-[#E5E7EB] text-[#6B7280] hover:bg-slate-200 hover:text-[#1F2937]"
+            className="grid h-8 w-8 place-items-center rounded-full border border-[#E2E8F0] text-[#64748B] hover:bg-slate-100 hover:text-[#0F172A] transition"
           >
             <X className="h-4 w-4" />
           </button>
         </div>
 
-        <div className="p-5 max-h-[380px] overflow-y-auto space-y-3">
+        <div className="p-6 max-h-[380px] overflow-y-auto space-y-3">
           {messages.map((m, i) => (
             <div
               key={i}
               className={cn(
-                "p-3.5 rounded-xl text-xs max-w-[85%] leading-relaxed",
+                "p-4 rounded-[20px] text-xs max-w-[85%] leading-relaxed font-medium",
                 m.role === "ai"
-                  ? "bg-[#00A99D]/10 border border-[#00A99D]/20 text-[#163B65] font-medium"
-                  : "bg-slate-100 border border-slate-200 text-[#1F2937] ml-auto font-medium"
+                  ? "bg-[#EFF6FF] border border-[#BFDBFE] text-[#1E3A8A]"
+                  : "bg-[#F1F5F9] border border-[#E2E8F0] text-[#0F172A] ml-auto"
               )}
             >
               {m.text}
@@ -78,183 +98,23 @@ function AskAiModal({ open, onClose }: { open: boolean; onClose: () => void }) {
           ))}
         </div>
 
-        <div className="p-4 border-t border-[#E5E7EB] bg-[#F6F8FB] flex gap-2">
+        <div className="p-4 border-t border-[#E2E8F0] bg-[#F8FAFC] flex gap-2">
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && send(input)}
             placeholder="Ask about resin prices, RFQs, CAPA, PPAP, or plant OEE…"
-            className="h-10 flex-1 rounded-lg border border-[#E5E7EB] bg-white px-3 text-xs outline-none focus:border-[#00A99D] focus:ring-2 focus:ring-[#00A99D]/20"
+            className="h-10 flex-1 rounded-full border border-[#E2E8F0] bg-white px-4 text-xs outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/20 font-medium"
           />
           <button
             onClick={() => send(input)}
-            className="btn-primary-teal inline-flex items-center gap-1.5"
+            className="btn-primary-cobalt inline-flex items-center gap-1.5"
           >
             <Send className="h-3.5 w-3.5" /> Send
           </button>
         </div>
       </div>
     </div>
-  );
-}
-
-function SidebarContent({
-  filterQuery,
-  setFilterQuery,
-  pathname,
-  onNavClick,
-}: {
-  filterQuery: string;
-  setFilterQuery: (v: string) => void;
-  pathname: string;
-  onNavClick?: () => void;
-}) {
-  return (
-    <>
-      {/* Quick Filter */}
-      <div className="px-3 pt-3">
-        <div className="relative">
-          <Search className="pointer-events-none absolute left-2.5 top-2.5 h-3.5 w-3.5 text-slate-400" />
-          <input
-            value={filterQuery}
-            onChange={(e) => setFilterQuery(e.target.value)}
-            placeholder="Filter workspaces…"
-            className="h-8 w-full rounded-md border border-[#1D4A7E] bg-[#1D4A7E]/50 pl-8 pr-2.5 text-[11px] text-white outline-none placeholder:text-slate-400 focus:border-[#00A99D]"
-          />
-        </div>
-      </div>
-
-      {/* Main Workspace Navigation */}
-      <nav className="flex-1 space-y-2 overflow-y-auto px-3 py-3">
-        <div className="px-2 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-[#00A99D]">
-          Workspaces
-        </div>
-        {WORKSPACES.filter(
-          (w) =>
-            !filterQuery ||
-            w.name.toLowerCase().includes(filterQuery.toLowerCase()) ||
-            w.items.some((i) => i.label.toLowerCase().includes(filterQuery.toLowerCase()))
-        ).map((ws) => {
-          const hasActiveChild = ws.items.some((i) =>
-            i.to === "/" ? pathname === "/" : pathname.startsWith(i.to)
-          );
-          const mainRoute = ws.items[0]?.to || "/";
-
-          return (
-            <Link
-              key={ws.id}
-              to={mainRoute}
-              title={ws.name}
-              onClick={onNavClick}
-              className={cn(
-                "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-150 group border",
-                hasActiveChild
-                  ? "bg-[#00A99D] text-white border-[#00A99D] font-bold shadow-sm"
-                  : "border-[#1D4A7E]/50 bg-[#123154]/40 text-slate-200 hover:bg-[#1D4A7E] hover:text-white hover:border-[#1D4A7E]"
-              )}
-            >
-              <div
-                className={cn(
-                  "grid h-8 w-8 shrink-0 place-items-center rounded-lg transition-colors",
-                  hasActiveChild
-                    ? "bg-white/20 text-white"
-                    : "bg-[#1D4A7E]/60 text-[#00A99D] group-hover:bg-[#1D4A7E] group-hover:text-white"
-                )}
-              >
-                <ws.icon className="h-4 w-4" />
-              </div>
-              <div className="min-w-0 flex-1 leading-tight">
-                <p className="truncate text-xs font-bold">{ws.name}</p>
-                <p
-                  className={cn(
-                    "truncate text-[10px] font-medium mt-0.5",
-                    hasActiveChild ? "text-white/80" : "text-slate-400 group-hover:text-slate-200"
-                  )}
-                >
-                  {ws.description}
-                </p>
-              </div>
-            </Link>
-          );
-        })}
-      </nav>
-
-      {/* Blueprint Progress Footer Widget */}
-      <div className="m-3 rounded-xl border border-[#1D4A7E] bg-[#123154] p-3">
-        <div className="flex items-center gap-2 text-xs font-bold text-white">
-          <Activity className="h-3.5 w-3.5 text-[#00A99D]" /> Blueprint Progress
-        </div>
-        <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-[#1D4A7E]">
-          <div className="h-full w-[62%] rounded-full bg-[#00A99D]" />
-        </div>
-        <p className="mt-2 text-[10px] font-semibold text-slate-300">
-          190 / 306 automations live · Wave 3
-        </p>
-      </div>
-    </>
-  );
-}
-
-function TopBar({
-  onOpenAskAi,
-  onOpenMobileMenu,
-}: {
-  onOpenAskAi: () => void;
-  onOpenMobileMenu: () => void;
-}) {
-  return (
-    <header className="sticky top-0 z-30 flex h-16 shrink-0 items-center gap-3 border-b border-[#E5E7EB] bg-white px-4 md:px-6 shadow-xs">
-      {/* Mobile hamburger */}
-      <button
-        onClick={onOpenMobileMenu}
-        aria-label="Open navigation menu"
-        className="grid h-9 w-9 place-items-center rounded-lg border border-[#E5E7EB] text-[#163B65] transition hover:bg-[#163B65] hover:text-white lg:hidden"
-      >
-        <Menu className="h-4 w-4" />
-      </button>
-
-      <div className="relative hidden max-w-xl flex-1 items-center md:flex">
-        <Search className="pointer-events-none absolute left-3.5 h-4 w-4 text-[#6B7280]" />
-        <input
-          placeholder="Ask Company AI... Search documents, plants, products, workflows, approvals..."
-          className="h-10 w-full rounded-lg border border-[#E5E7EB] bg-[#F6F8FB] pl-10 pr-14 text-xs text-[#1F2937] outline-none transition placeholder:text-[#6B7280] focus:border-[#00A99D] focus:bg-white focus:ring-2 focus:ring-[#00A99D]/20"
-        />
-        <kbd className="absolute right-3 rounded border border-[#E5E7EB] bg-slate-100 px-1.5 py-0.5 font-mono text-[10px] font-semibold text-[#6B7280]">
-          ⌘K
-        </kbd>
-      </div>
-
-      <div className="ml-auto flex items-center gap-2.5">
-        <button
-          onClick={onOpenAskAi}
-          className="btn-primary-teal inline-flex items-center gap-2"
-        >
-          <Sparkles className="h-3.5 w-3.5" />
-          <span className="hidden sm:inline">Ask Company AI</span>
-          <span className="sm:hidden">AI</span>
-        </button>
-
-        <div className="hidden items-center gap-2 rounded-lg border border-[#E5E7EB] bg-[#F6F8FB] px-3 py-1.5 text-xs text-[#6B7280] lg:flex font-semibold">
-          <span className="h-2 w-2 rounded-full bg-[#34C759]" />
-          AI Fleet Healthy · 63 agents
-        </div>
-
-        <TopIcon to="/m/running-workflows" icon={Workflow} count={31} label="Running workflows" />
-        <TopIcon to="/approvals" icon={CheckSquare} count={6} label="Approvals" />
-        <TopIcon to="/m/integrations" icon={Plug} count={14} label="Connected systems" />
-        <TopIcon to="/m/notifications" icon={Bell} count={9} label="Notifications" />
-
-        <div className="ml-1 flex items-center gap-2.5 rounded-lg border border-[#E5E7EB] bg-[#F6F8FB] p-1 pr-3">
-          <div className="grid h-7 w-7 place-items-center rounded-md bg-[#163B65] text-xs font-bold text-white">
-            RM
-          </div>
-          <div className="hidden leading-tight sm:block text-left">
-            <p className="text-xs font-bold text-[#163B65]">Raj Malhotra</p>
-            <p className="text-[10px] font-medium text-[#6B7280]">Group MD</p>
-          </div>
-        </div>
-      </div>
-    </header>
   );
 }
 
@@ -274,10 +134,10 @@ function TopIcon({
       to={to}
       title={label}
       aria-label={label}
-      className="relative grid h-9 w-9 place-items-center rounded-lg border border-[#E5E7EB] bg-[#F6F8FB] text-[#6B7280] transition hover:border-[#00A99D] hover:bg-white hover:text-[#00A99D]"
+      className="relative grid h-9 w-9 place-items-center rounded-full border border-[#E2E8F0] bg-white text-[#475569] transition hover:border-[#2563EB] hover:text-[#2563EB]"
     >
       <Icon className="h-4 w-4" />
-      <span className="absolute -right-1 -top-1 grid h-4 min-w-4 place-items-center rounded-full bg-[#00A99D] px-1 text-[9px] font-bold text-white shadow-xs">
+      <span className="absolute -right-1 -top-1 grid h-4 min-w-4 place-items-center rounded-full bg-[#2563EB] px-1 text-[9px] font-extrabold text-white shadow-xs">
         {count}
       </span>
     </Link>
@@ -294,20 +154,20 @@ export function WorkspaceSubmoduleNav() {
   if (!activeWorkspace) return null;
 
   return (
-    <div className="mb-6 rounded-xl border border-[#E5E7EB] bg-white p-3 shadow-xs">
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#E5E7EB]/80 pb-2.5 mb-2.5">
-        <div className="flex items-center gap-2.5">
-          <div className="grid h-7 w-7 place-items-center rounded-lg bg-[#163B65] text-white shadow-2xs">
-            <activeWorkspace.icon className="h-4 w-4 text-[#00A99D]" />
+    <div className="mb-6 rounded-[24px] border border-[#E2E8F0] bg-white p-4 shadow-xs">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#E2E8F0] pb-3 mb-3">
+        <div className="flex items-center gap-3">
+          <div className="grid h-8 w-8 place-items-center rounded-xl bg-[#2563EB] text-white shadow-xs">
+            <activeWorkspace.icon className="h-4 w-4 text-white" />
           </div>
           <div>
-            <h2 className="text-xs font-bold uppercase tracking-wider text-[#163B65]">
+            <h2 className="text-xs font-extrabold uppercase tracking-wider text-[#0F172A]">
               {activeWorkspace.name} Control Hub
             </h2>
-            <p className="text-[11px] font-medium text-[#6B7280]">{activeWorkspace.description}</p>
+            <p className="text-[11px] font-medium text-[#64748B]">{activeWorkspace.description}</p>
           </div>
         </div>
-        <span className="rounded-full bg-[#163B65]/10 px-2.5 py-0.5 text-[10px] font-bold text-[#163B65]">
+        <span className="rounded-full bg-[#EFF6FF] border border-[#BFDBFE] px-3 py-0.5 text-[10px] font-extrabold text-[#2563EB]">
           {activeWorkspace.items.length} Submodules
         </span>
       </div>
@@ -321,19 +181,19 @@ export function WorkspaceSubmoduleNav() {
               key={item.label}
               to={item.to}
               className={cn(
-                "inline-flex items-center gap-2 rounded-lg px-3.5 py-1.5 text-xs font-bold transition-all duration-150",
+                "inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-extrabold transition-all duration-150",
                 isActive
-                  ? "bg-[#00A99D] text-white shadow-xs"
-                  : "bg-[#F6F8FB] text-[#4B7EA8] hover:bg-[#163B65] hover:text-white border border-[#E5E7EB]"
+                  ? "bg-[#2563EB] text-white shadow-md shadow-[#2563EB]/25"
+                  : "bg-[#F8FAFC] text-[#475569] hover:bg-[#F1F5F9] hover:text-[#0F172A] border border-[#E2E8F0]"
               )}
             >
-              <Icon className={cn("h-3.5 w-3.5", isActive ? "text-white" : "text-[#4B7EA8]")} />
+              <Icon className={cn("h-3.5 w-3.5", isActive ? "text-white" : "text-[#64748B]")} />
               <span>{item.label}</span>
               {item.badge && (
                 <span
                   className={cn(
-                    "rounded-full px-1.5 py-0.2 text-[9px]",
-                    isActive ? "bg-white/20 text-white" : "bg-[#E5E7EB] text-[#1F2937]"
+                    "rounded-full px-2 py-0.2 text-[9px]",
+                    isActive ? "bg-white/20 text-white" : "bg-[#E2E8F0] text-[#0F172A]"
                   )}
                 >
                   {item.badge}
@@ -348,149 +208,212 @@ export function WorkspaceSubmoduleNav() {
 }
 
 export function AppShell({ children }: { children: ReactNode }) {
-  const [collapsed, setCollapsed] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
   const [openAskAi, setOpenAskAi] = useState(false);
-  const [filterQuery, setFilterQuery] = useState("");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   return (
-    <div className="flex min-h-screen w-full bg-[#F6F8FB] font-sans">
+    <div className="min-h-screen w-full bg-[#F8FAFC] font-sans text-[#0F172A] pt-3.5">
       <AskAiModal open={openAskAi} onClose={() => setOpenAskAi(false)} />
 
-      {/* ── Mobile Drawer Backdrop ── */}
-      {mobileOpen && (
+      {/* ── Mobile Menu Backdrop & Drawer ── */}
+      {mobileMenuOpen && (
         <div
-          className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm lg:hidden"
-          onClick={() => setMobileOpen(false)}
-        />
-      )}
-
-      {/* ── Mobile Drawer ── */}
-      <aside
-        className={cn(
-          "fixed inset-y-0 left-0 z-50 flex w-[280px] flex-col border-r border-[#1D4A7E] bg-[#163B65] text-white shadow-2xl transition-transform duration-300 ease-in-out lg:hidden",
-          mobileOpen ? "translate-x-0" : "-translate-x-full"
-        )}
-      >
-        {/* Mobile Drawer Header */}
-        <div className="flex h-16 items-center gap-3 border-b border-[#1D4A7E] px-4">
-          <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#00A99D] text-white shadow-xs">
-            <Hexagon className="h-5 w-5 fill-white/20" />
-          </div>
-          <div className="min-w-0 flex-1 leading-tight">
-            <p className="truncate font-bold text-white text-sm">AI Command Center</p>
-            <p className="truncate text-[10px] font-semibold text-[#00A99D]">Polymer Operating System</p>
-          </div>
-          <button
-            onClick={() => setMobileOpen(false)}
-            aria-label="Close navigation menu"
-            className="grid h-7 w-7 place-items-center rounded-md border border-[#1D4A7E] text-slate-300 transition hover:bg-[#1D4A7E] hover:text-white"
+          className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs lg:hidden"
+          onClick={() => setMobileMenuOpen(false)}
+        >
+          <div
+            className="fixed inset-y-0 left-0 w-[300px] bg-white p-6 shadow-2xl flex flex-col justify-between overflow-y-auto animate-rise"
+            onClick={(e) => e.stopPropagation()}
           >
-            <X className="h-4 w-4" />
-          </button>
-        </div>
-
-        <SidebarContent
-          filterQuery={filterQuery}
-          setFilterQuery={setFilterQuery}
-          pathname={pathname}
-          onNavClick={() => setMobileOpen(false)}
-        />
-      </aside>
-
-      {/* ── Desktop Sidebar ── */}
-      <aside
-        className={cn(
-          "sticky top-0 z-40 hidden h-screen shrink-0 flex-col border-r border-[#1D4A7E] bg-[#163B65] text-white transition-all duration-300 lg:flex shadow-md",
-          collapsed ? "w-[76px]" : "w-[270px]"
-        )}
-      >
-        {/* Desktop Sidebar Header */}
-        <div className={cn("flex h-16 items-center border-b border-[#1D4A7E] bg-[#163B65]", collapsed ? "justify-center px-2" : "gap-3 px-4")}>
-          {collapsed ? (
-            <button
-              onClick={() => setCollapsed(false)}
-              title="Expand sidebar"
-              aria-label="Expand sidebar"
-              className="grid h-10 w-10 place-items-center rounded-xl bg-[#00A99D] text-white shadow-xs hover:scale-105 transition-transform"
-            >
-              <Hexagon className="h-5 w-5 fill-white/20" />
-            </button>
-          ) : (
-            <>
-              <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#00A99D] text-white shadow-xs">
-                <Hexagon className="h-5 w-5 fill-white/20" />
+            <div>
+              {/* Header */}
+              <div className="flex items-center justify-between border-b border-[#E2E8F0] pb-4 mb-5">
+                <div className="flex items-center gap-3">
+                  <img src="/logo.png" alt="Logo" className="h-8 w-8 object-contain rounded-lg" />
+                  <div>
+                    <p className="font-extrabold text-[#0F172A] text-sm">PLASTIC AI OS</p>
+                    <p className="text-[10px] font-bold text-[#2563EB]">Fortiv Solutions</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="grid h-8 w-8 place-items-center rounded-full border border-[#E2E8F0] text-[#64748B]"
+                >
+                  <X className="h-4 w-4" />
+                </button>
               </div>
-              <div className="min-w-0 leading-tight">
-                <p className="truncate font-bold text-white text-sm">AI Command Center</p>
-                <p className="truncate text-[10px] font-semibold text-[#00A99D]">Polymer Operating System</p>
+
+              {/* Navigation Links */}
+              <div className="space-y-1.5">
+                <p className="text-[10px] font-extrabold uppercase tracking-wider text-[#64748B] px-2 mb-2">
+                  Navigation
+                </p>
+                {TOP_NAV_TABS.map((tab) => {
+                  const isActive = tab.to === "/" ? pathname === "/" : pathname.startsWith(tab.to);
+                  return (
+                    <Link
+                      key={tab.label}
+                      to={tab.to}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className={cn(
+                        "flex items-center gap-3 rounded-full px-4 py-2.5 text-xs font-extrabold transition-all",
+                        isActive
+                          ? "bg-[#2563EB] text-white shadow-md shadow-[#2563EB]/25"
+                          : "text-[#475569] hover:bg-[#F1F5F9] hover:text-[#0F172A]"
+                      )}
+                    >
+                      <tab.icon className={cn("h-4 w-4", isActive ? "text-white" : "text-[#64748B]")} />
+                      <span>{tab.label}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Bottom Utilities */}
+            <div className="border-t border-[#E2E8F0] pt-4 mt-6 space-y-3">
+              <div className="flex items-center gap-2 rounded-full border border-[#E2E8F0] bg-[#F8FAFC] px-3.5 py-2 text-xs font-bold text-[#0F172A]">
+                <span>🏭 Plant: Anand</span>
               </div>
               <button
-                onClick={() => setCollapsed(true)}
-                aria-label="Collapse sidebar"
-                className="ml-auto grid h-7 w-7 place-items-center rounded-md border border-[#1D4A7E] text-slate-300 transition hover:bg-[#1D4A7E] hover:text-white"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  setOpenAskAi(true);
+                }}
+                className="w-full btn-primary-cobalt flex items-center justify-center gap-2"
               >
-                <ChevronLeft className="h-4 w-4" />
+                <Sparkles className="h-4 w-4" /> Ask AI
               </button>
-            </>
-          )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Floating Top Navigation Header ── */}
+      <header className="sticky top-3.5 z-40 mx-auto w-full max-w-[1800px] px-4 lg:px-6 mb-6">
+        
+        {/* Mobile Header (< lg): 2 Floating Pill Cards */}
+        <div className="flex items-center justify-between gap-2 lg:hidden w-full">
+          {/* Card 1: Left Brand Pill (Logo + Hamburger Menu) */}
+          <div className="h-14 rounded-full bg-white border border-[#E2E8F0] shadow-md px-3 flex items-center gap-2 shrink-0">
+            <Link to="/" className="flex items-center gap-2">
+              <img src="/logo.png" alt="Plastic AI OS Logo" className="h-8 w-8 object-contain shrink-0 rounded-lg" />
+            </Link>
+            <button
+              onClick={() => setMobileMenuOpen(true)}
+              aria-label="Open mobile menu"
+              className="grid h-9 w-9 place-items-center rounded-full border border-[#E2E8F0] text-[#0F172A] bg-[#F8FAFC] hover:bg-[#F1F5F9] transition-colors"
+            >
+              <Menu className="h-4 w-4" />
+            </button>
+          </div>
+
+          {/* Card 2: Right Utilities Pill */}
+          <div className="h-14 rounded-full bg-white border border-[#E2E8F0] shadow-md px-3 flex items-center gap-1.5 shrink-0 overflow-x-auto scrollbar-none">
+            <button
+              onClick={() => setOpenAskAi(true)}
+              className="h-9 rounded-full bg-[#2563EB] text-white px-3.5 text-xs font-extrabold flex items-center gap-1 shadow-md shadow-[#2563EB]/20 shrink-0"
+            >
+              <Sparkles className="h-3.5 w-3.5" />
+              <span>Ask AI</span>
+            </button>
+
+            <Link
+              to="/cockpit"
+              className="h-9 rounded-full bg-white border border-[#E2E8F0] text-[#0F172A] px-3 text-xs font-extrabold flex items-center gap-1 shrink-0"
+            >
+              <Crown className="h-3.5 w-3.5 text-[#2563EB]" />
+              <span>ROI</span>
+            </Link>
+
+            <TopIcon to="/m/notifications" icon={Bell} count={9} label="Notifications" />
+
+            <div className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-[#1E3A8A] text-xs font-extrabold text-white shadow-xs">
+              RM
+            </div>
+          </div>
         </div>
 
-        {!collapsed ? (
-          <SidebarContent
-            filterQuery={filterQuery}
-            setFilterQuery={setFilterQuery}
-            pathname={pathname}
-          />
-        ) : (
-          /* Collapsed icon-only nav */
-          <nav className="flex-1 space-y-2 overflow-y-auto px-2 py-3">
-            {WORKSPACES.map((ws) => {
-              const hasActiveChild = ws.items.some((i) =>
-                i.to === "/" ? pathname === "/" : pathname.startsWith(i.to)
-              );
-              const mainRoute = ws.items[0]?.to || "/";
+        {/* Desktop Header (>= lg): 3 Cards on 1 Row */}
+        <div className="hidden lg:flex items-center justify-between gap-3 w-full">
+          
+          {/* Card 1: Left Brand Card */}
+          <Link
+            to="/"
+            className="h-14 rounded-[28px] bg-white border border-[#E2E8F0] shadow-md px-4 flex items-center gap-3 shrink-0 hover:border-[#2563EB]/40 transition-all"
+          >
+            <img src="/logo.png" alt="Plastic AI OS Logo" className="h-9 w-9 object-contain shrink-0 rounded-lg" />
+            <div className="min-w-0 leading-tight">
+              <p className="truncate font-extrabold text-[#0F172A] text-sm tracking-tight">PLASTIC AI OS</p>
+              <p className="truncate text-[10px] font-extrabold text-[#2563EB]">Fortiv Solutions · Enterprise AI Platform</p>
+            </div>
+          </Link>
+
+          {/* Card 2: Center Navigation Pill */}
+          <div className="h-14 rounded-full bg-white border border-[#E2E8F0] shadow-md px-3 flex items-center justify-start gap-1.5 flex-1 min-w-0 overflow-x-auto scrollbar-none">
+            {TOP_NAV_TABS.map((tab) => {
+              const isActive = tab.to === "/" ? pathname === "/" : pathname.startsWith(tab.to);
               return (
                 <Link
-                  key={ws.id}
-                  to={mainRoute}
-                  title={ws.name}
+                  key={tab.label}
+                  to={tab.to}
                   className={cn(
-                    "flex items-center justify-center p-2.5 rounded-xl transition-all duration-150 border",
-                    hasActiveChild
-                      ? "bg-[#00A99D] text-white border-[#00A99D] shadow-sm"
-                      : "border-[#1D4A7E]/50 bg-[#123154]/40 text-slate-200 hover:bg-[#1D4A7E] hover:text-white hover:border-[#1D4A7E]"
+                    "h-9 rounded-full px-3.5 text-xs font-extrabold flex items-center gap-1.5 shrink-0 transition-all duration-150",
+                    isActive
+                      ? "bg-[#2563EB] text-white shadow-md shadow-[#2563EB]/25"
+                      : "text-[#475569] hover:bg-[#F1F5F9] hover:text-[#0F172A]"
                   )}
                 >
-                  <div
-                    className={cn(
-                      "grid h-8 w-8 place-items-center rounded-lg",
-                      hasActiveChild
-                        ? "bg-white/20 text-white"
-                        : "bg-[#1D4A7E]/60 text-[#00A99D]"
-                    )}
-                  >
-                    <ws.icon className="h-4 w-4" />
-                  </div>
+                  <tab.icon className={cn("h-3.5 w-3.5", isActive ? "text-white" : "text-[#64748B]")} />
+                  <span>{tab.label}</span>
                 </Link>
               );
             })}
-          </nav>
-        )}
-      </aside>
+          </div>
 
-      {/* ── Main content area ── */}
-      <div className="flex min-w-0 flex-1 flex-col">
-        <TopBar
-          onOpenAskAi={() => setOpenAskAi(true)}
-          onOpenMobileMenu={() => setMobileOpen(true)}
-        />
-        <main className="min-w-0 flex-1 p-4 md:p-6 max-w-7xl w-full mx-auto">
-          <WorkspaceSubmoduleNav />
-          {children}
-        </main>
-      </div>
+          {/* Card 3: Right Utilities Card */}
+          <div className="h-14 rounded-full bg-white border border-[#E2E8F0] shadow-md px-3 flex items-center gap-2 shrink-0">
+            <button
+              onClick={() => setOpenAskAi(true)}
+              className="h-9 rounded-full bg-[#2563EB] hover:bg-[#1D4ED8] text-white px-4 text-xs font-extrabold flex items-center gap-1.5 shadow-md shadow-[#2563EB]/20 hover:-translate-y-0.5 transition-all"
+            >
+              <Sparkles className="h-3.5 w-3.5" />
+              <span>Ask AI</span>
+            </button>
+
+            <Link
+              to="/cockpit"
+              className="h-9 rounded-full bg-white border border-[#E2E8F0] text-[#0F172A] hover:bg-[#F8FAFC] px-3.5 text-xs font-bold flex items-center gap-1.5 transition-all"
+            >
+              <Crown className="h-3.5 w-3.5 text-[#2563EB]" />
+              <span>ROI</span>
+            </Link>
+
+            {/* Plant Selector */}
+            <div className="hidden xl:flex items-center gap-1.5 rounded-full border border-[#E2E8F0] bg-[#F8FAFC] px-3 h-9 text-xs font-bold text-[#0F172A]">
+              <span>🏭 Plant: Anand</span>
+              <ChevronDown className="h-3 w-3 text-[#64748B]" />
+            </div>
+
+            <TopIcon to="/m/notifications" icon={Bell} count={9} label="Notifications" />
+
+            <div className="flex items-center gap-2 rounded-full border border-[#E2E8F0] bg-[#F8FAFC] p-1 pr-3">
+              <div className="grid h-7 w-7 place-items-center rounded-full bg-[#1E3A8A] text-xs font-bold text-white shadow-xs">
+                RM
+              </div>
+              <span className="text-xs font-bold text-[#0F172A]">Raj M.</span>
+            </div>
+          </div>
+
+        </div>
+      </header>
+
+      {/* ── Main Content Container ── */}
+      <main className="mx-auto w-full max-w-[1800px] px-4 lg:px-6 pb-12">
+        <WorkspaceSubmoduleNav />
+        {children}
+      </main>
     </div>
   );
 }
